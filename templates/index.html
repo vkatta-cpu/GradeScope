@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradeScope | Student Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">🎓 GradeScope</div>
+        <p class="side-label">MAIN MENU</p>
+        <a href="#overview" class="nav-link active">▦ Overview</a>
+        <a href="#analytics" class="nav-link">▥ Analytics</a>
+        <a href="#students" class="nav-link">♙ Students</a>
+        <a href="#add-student" class="nav-link">＋ Add Student</a>
+        <div class="sidebar-bottom">
+            <div class="profile-avatar">GS</div>
+            <div>
+                <strong>Administrator</strong>
+                <small>Academic Portal</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Student Performance Dashboard</h1>
+                <p>Monitor academic progress and student achievements.</p>
+            </div>
+            <a href="{{ url_for('export_csv') }}" class="export-btn">
+                ↓ Export CSV
+            </a>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <section id="overview">
+            <div class="section-heading">
+                <div>
+                    <h2>Overview</h2>
+                    <p>Academic performance at a glance</p>
+                </div>
+                <span class="live-badge">● Live Statistics</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>Total Records</span>
+                    <h2>{{ total }}</h2>
+                    <small>Student subject records</small>
+                </div>
+                <div class="stat-card">
+                    <span>Average Marks</span>
+                    <h2>{{ avg }}%</h2>
+                    <small>Overall average score</small>
+                </div>
+                <div class="stat-card">
+                    <span>Pass Percentage</span>
+                    <h2>{{ pass_rate }}%</h2>
+                    <small>Students scoring 40 or above</small>
+                </div>
+                <div class="stat-card warning-card">
+                    <span>At-Risk Records</span>
+                    <h2>{{ at_risk }}</h2>
+                    <small>Marks below 40</small>
+                </div>
+            </div>
+        </section>
+
+        <section id="analytics">
+            <div class="section-heading">
+                <div>
+                    <h2>Performance Analytics</h2>
+                    <p>Visual analysis of academic results</p>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="panel">
+                    <h3>Subject-wise Average</h3>
+                    <canvas id="subjectChart"></canvas>
+                </div>
+                <div class="panel">
+                    <h3>Marks Distribution</h3>
+                    <canvas id="distributionChart"></canvas>
+                </div>
+                <div class="panel">
+                    <h3>Department Comparison</h3>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel top-panel">
+                <h3>🏆 Top Performing Students</h3>
+                <div class="top-list">
+                    {% for student in top %}
+                    <div class="top-row">
+                        <div>
+                            <strong>{{ student.name }}</strong>
+                            <small>{{ student.roll_no }} · {{ student.subject }}</small>
+                        </div>
+                        <span class="score">{{ student.marks }}%</span>
+                    </div>
+                    {% else %}
+                    <p>No student records available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section id="add-student">
+            <div class="section-heading">
+                <div>
+                    <h2>Add New Student</h2>
+                    <p>Enter academic information below</p>
+                </div>
+            </div>
+
+            <form action="{{ url_for('add_student') }}" method="POST" class="student-form">
+                <div class="form-grid">
+                    <div>
+                        <label>Student Name</label>
+                        <input type="text" name="name" placeholder="Enter full name" required>
+                    </div>
+                    <div>
+                        <label>Roll Number</label>
+                        <input type="text" name="roll_no" placeholder="Example: CS107" required>
+                    </div>
+                    <div>
+                        <label>Department</label>
+                        <select name="department" required>
+                            <option value="">Select department</option>
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="IT">IT</option>
+                            <option value="EEE">EEE</option>
+                            <option value="MECH">MECH</option>
+                            <option value="CIVIL">CIVIL</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Semester</label>
+                        <input type="number" name="semester" min="1" max="12" placeholder="Example: 3" required>
+                    </div>
+                    <div>
+                        <label>Subject</label>
+                        <input type="text" name="subject" placeholder="Example: Python" required>
+                    </div>
+                    <div>
+                        <label>Marks (0-100)</label>
+                        <input type="number" name="marks" min="0" max="100" step="0.1" placeholder="Enter marks" required>
+                    </div>
+                </div>
+                <button type="submit" class="primary-btn">＋ Add Student Record</button>
+            </form>
+        </section>
+
+        <section id="students">
+            <div class="section-heading">
+                <div>
+                    <h2>Student Records</h2>
+                    <p>Manage and review academic records</p>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-search">
+                    <input type="text" id="searchInput" placeholder="Search by name, roll number or subject...">
+                </div>
+
+                <div class="table-wrap">
+                    <table id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll Number</th>
+                                <th>Department</th>
+                                <th>Semester</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><strong>{{ student.name }}</strong></td>
+                                <td>{{ student.roll_no }}</td>
+                                <td>{{ student.department }}</td>
+                                <td>{{ student.semester }}</td>
+                                <td>{{ student.subject }}</td>
+                                <td>{{ student.marks }}%</td>
+                                <td>
+                                    {% if student.marks >= 40 %}
+                                        <span class="status pass">Pass</span>
+                                    {% else %}
+                                        <span class="status fail">At Risk</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('delete_student', student_id=student.id) }}" method="POST" onsubmit="return confirm('Delete this student record?')">
+                                        <button class="delete-btn" type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8">No student records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>GradeScope © 2026 | Student Performance Analytics System</p>
+            <small>Built with Python, Flask and SQLite</small>
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    const subjectData = {{ subject_rows | tojson }};
+    const distributionData = {{ distribution | tojson }};
+    const departmentData = {{ dept_rows | tojson }};
+
+    Chart.defaults.font.family = "Arial";
+
+    new Chart(document.getElementById("subjectChart"), {
+        type: "bar",
+        data: {
+            labels: subjectData.map(x => x.subject),
+            datasets: [{
+                label: "Average Marks",
+                data: subjectData.map(x => x.average),
+                backgroundColor: "#7467e8",
+                borderRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100 } }
+        }
+    });
+
+    new Chart(document.getElementById("distributionChart"), {
+        type: "doughnut",
+        data: {
+            labels: distributionData.map(x => x.band),
+            datasets: [{
+                data: distributionData.map(x => x.total),
+                backgroundColor: ["#ef6464", "#f5b942", "#648de5", "#35b58a"]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    new Chart(document.getElementById("departmentChart"), {
+        type: "bar",
+        data: {
+            labels: departmentData.map(x => x.department),
+            datasets: [{
+                label: "Average Marks",
+                data: departmentData.map(x => x.average),
+                backgroundColor: "#35b58a",
+                borderRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100 } }
+        }
+    });
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll("#studentTable tbody tr").forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+        });
+    });
+</script>
+
+</body>
+</html>

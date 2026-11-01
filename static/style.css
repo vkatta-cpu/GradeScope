@@ -1,0 +1,398 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f6fb;
+    color: #24243a;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 245px;
+    background: #201d3a;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: 750;
+    margin-bottom: 55px;
+}
+
+.side-label {
+    color: #a5a1bd;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    margin: 0 12px 15px;
+}
+
+.nav-link {
+    color: #c8c5d9;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 9px;
+    margin-bottom: 7px;
+    transition: 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #514a85;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid #45405e;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-avatar {
+    background: #7668dc;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: bold;
+}
+
+.sidebar-bottom strong,
+.sidebar-bottom small {
+    display: block;
+}
+
+.sidebar-bottom small {
+    color: #aaa6bd;
+    margin-top: 4px;
+}
+
+.main-content {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    padding: 32px 38px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.topbar h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.topbar p,
+.section-heading p {
+    color: #85859a;
+    font-size: 14px;
+}
+
+.export-btn,
+.primary-btn {
+    background: #7062d8;
+    color: white;
+    border: none;
+    padding: 12px 19px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.export-btn:hover,
+.primary-btn:hover {
+    background: #5749c0;
+}
+
+section {
+    margin-bottom: 38px;
+    scroll-margin-top: 25px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    font-size: 21px;
+    margin-bottom: 6px;
+}
+
+.live-badge {
+    color: #21966f;
+    background: #e4f6ed;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.stat-card,
+.panel,
+.student-form {
+    background: white;
+    border-radius: 13px;
+    padding: 22px;
+    box-shadow: 0 3px 15px rgba(30, 30, 60, 0.04);
+    border: 1px solid #ececf3;
+}
+
+.stat-card span {
+    color: #77778d;
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    font-size: 30px;
+    margin: 14px 0 8px;
+    color: #5144bb;
+}
+
+.stat-card small {
+    color: #9999aa;
+}
+
+.warning-card h2 {
+    color: #e28a36;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.panel h3 {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.charts-grid .panel {
+    min-height: 310px;
+}
+
+.charts-grid canvas {
+    width: 100% !important;
+    height: 235px !important;
+}
+
+.top-panel {
+    margin-top: 20px;
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #eeeeF4;
+}
+
+.top-row:last-child {
+    border-bottom: none;
+}
+
+.top-row small {
+    display: block;
+    color: #88889b;
+    margin-top: 5px;
+}
+
+.score {
+    color: #21966f;
+    font-weight: 700;
+}
+
+.student-form {
+    padding: 26px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.form-grid label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-grid input,
+.form-grid select,
+.table-search input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dedee9;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+    background: white;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.table-search input:focus {
+    border-color: #7062d8;
+}
+
+.alert {
+    padding: 13px 17px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert.success {
+    background: #e5f7ee;
+    color: #18764f;
+}
+
+.alert.error {
+    background: #ffeded;
+    color: #b83232;
+}
+
+.table-panel {
+    padding: 20px;
+}
+
+.table-search {
+    margin-bottom: 18px;
+    max-width: 380px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+th,
+td {
+    padding: 15px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eeeeF4;
+    font-size: 13px;
+}
+
+th {
+    background: #f8f8fc;
+    color: #77778b;
+    font-weight: 600;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pass {
+    color: #16845c;
+    background: #e2f6ed;
+}
+
+.fail {
+    color: #c45151;
+    background: #ffeded;
+}
+
+.delete-btn {
+    background: #fff0f0;
+    color: #d14b4b;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #ffdada;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 0;
+    color: #88889b;
+    border-top: 1px solid #e8e8ef;
+    font-size: 13px;
+}
+
+footer small {
+    display: block;
+    margin-top: 7px;
+}
+
+@media (max-width: 1000px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .charts-grid,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .topbar h1 {
+        font-size: 22px;
+    }
+}
