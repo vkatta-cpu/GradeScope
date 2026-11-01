@@ -63,3 +63,6 @@ GradeScope_New/
 
 College-level academic project.
 
+## Dashboard Preview
+
+![GradeScope Dashboard](screenshots/dashboard.png)
